@@ -1,0 +1,239 @@
+\documentclass[12pt,a4paperб]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english, russian]{babel}
+\usepackage{indentfirst}
+\usepackage{misccorr}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{parskip}
+%\usepackage{tempora}
+\usepackage[top=2cm, bottom=1cm, left=1cm, right=1cm]{geometry}
+\usepackage[most]{tcolorbox}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{svg}
+\usepackage{multirow}
+\usepackage{colortbl}
+
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=blue,
+	urlcolor=blue
+}
+
+\pagestyle{fancy}
+\lhead{Университет}
+\rhead{\thepage}
+\cfoot{}
+
+\graphicspath{{pic/}, {~/Pictures/TeXImgs/}, {~/Pictures/Joplin Icons}}
+
+\newcommand{\sfrac}[2]{\dfrac{\strut #1}{\strut #2}}
+
+\newcounter{picture}
+\setcounter{picture}{1}
+\newcounter{tbl}
+\setcounter{tbl}{1}
+\newcommand{\embed}[3]{\begin{center}
+		\includegraphics[scale=#2]{#1}
+		\\\textbf{Рис. \thepicture:} #3
+		\label{pic_\thepicture}
+		\addtocounter{picture}{1}
+\end{center}}
+\newcommand{\embedeps}[3]{\begin{center}
+		\includegraphics[width=#2\linewidth]{#1}
+		\\\textbf{Рис. \thepicture:} #3
+		\label{pic_\thepicture}
+		\addtocounter{picture}{1}
+\end{center}}
+\newcommand{\embedsvg}[3]{\begin{center}
+		\includesvg[width=#2\linewidth]{#1}
+		\\\textbf{Рис. \thepicture:} #3
+		\label{pic_\thepicture}
+		\addtocounter{picture}{1}
+\end{center}}
+\newcommand{\embedtbl}[2]{\begin{center}
+		#1
+		\textbf{Табл. \thetbl:} #2
+		\label{tbl_\thetbl}
+		\addtocounter{tbl}{1}
+\end{center}}
+\newcommand{\picref}[1]{\hyperref[pic_#1]{Рис. #1}}
+\newcommand{\tblref}[1]{\hyperref[tbl_#1]{Табл. #1}}
+
+\begin{document}
+	
+		\begin{titlepage}
+		\vspace*{\fill}
+		
+		\begin{center}
+			\includesvg[width=0.3\linewidth]{quarkus.svg}
+			\\[0.5cm]\noindent\rule{\textwidth}{1pt}
+			\\\Huge\textbf{Проектирование "университет"}
+			\\[-0.5cm]\noindent\rule{\textwidth}{1pt}
+		\end{center}
+		
+		\vspace*{\fill}
+		
+		\begin{flushleft}
+			Выполнил: \hspace{\fill}
+			\\Кошелев Александр \hspace{\fill}
+		\end{flushleft}
+	\end{titlepage}
+	
+	\tableofcontents
+	
+	\setcounter{page}{2}
+	\newpage
+	
+	\section{Проектирование макета сервиса}
+	
+	\subsection{Постановка задачи}
+	
+	Задача в данном проекте ставится достаточно просто -- разработать бэкенд учетного сервиса.
+	
+	Необходимо иметь возможность оперировать как крупными структурами вроде факультета или направления обучения, так и мелкими, например, студентами. Также необходимо проанализировать ролевую систему в рамках приложения, проработать возможный вид UI и строить бэкенд методом "от потребителя".
+	
+	\subsection{Анализ ролевой модели}
+	
+	Поскольку система подразумевает самые разные уровни управления, все слои иерархии института должны получить соответствующие UI и функционал для ведения деятельности. Предполагаются следующие роли и полномочия:
+	
+	\begin{itemize}
+		\item Ректорат -- просмотр и редактирование факультетов и направлений обучения.
+		\item Дирекция факультета -- изменения в структурах курсов, предметов, пересмотр учебной части.
+		\item Кадровая служба -- прием на работу преподавателей, изменения в кадровой структуре.
+		\item Приемная комиссия -- прием на обучение студентов.
+		\item Учебные управления факультетов -- пересмотр оценок студентов в исключительных случаях.
+		\item Преподаватели -- редактирование оценок студентов.
+		\item Студенты -- просмотр оценок и учебного плана.
+	\end{itemize}
+	
+	На основании такой ролевой модели можно выделить необходимые для функционирования сервиса единицы GUI.  	 Представим их в табличном виде по отношению к имеющимся ролям и подробно опишем ниже.
+	 
+	 \embedtbl{
+	 	\begin{table}[h]
+	 		\centering
+	 		\begin{tabular}{|
+	 				>{\columncolor[HTML]{EFEFEF}}c |
+	 				>{\columncolor[HTML]{FFFFC7}}c |
+	 				>{\columncolor[HTML]{FFFFC7}}c |
+	 				>{\columncolor[HTML]{FFFFC7}}c |
+	 				>{\columncolor[HTML]{FFFFC7}}c |}
+	 			\hline
+	 			Роль/GUI &
+	 			\cellcolor[HTML]{EFEFEF}\begin{tabular}[c]{@{}c@{}}Административная\\ структура\end{tabular} &
+	 			\cellcolor[HTML]{EFEFEF}Персоналии &
+	 			\cellcolor[HTML]{EFEFEF}\begin{tabular}[c]{@{}c@{}}Учебный\\ план\end{tabular} &
+	 			\cellcolor[HTML]{EFEFEF}Журнал \\ \hline
+	 			Ректорат &
+	 			\cellcolor[HTML]{D9FFD8}EDIT &
+	 			READ &
+	 			READ &
+	 			READ \\ \hline
+	 			\begin{tabular}[c]{@{}c@{}}Дирекция\\ факультета\end{tabular} &
+	 			READ &
+	 			READ &
+	 			\cellcolor[HTML]{D9FFD8}EDIT &
+	 			READ \\ \hline
+	 			\cellcolor[HTML]{EFEFEF} &
+	 			\cellcolor[HTML]{FFFFC7} &
+	 			\cellcolor[HTML]{D9FFD8}\begin{tabular}[c]{@{}c@{}}EDIT\\ Кадровая структура\end{tabular} &
+	 			\cellcolor[HTML]{FFFFC7} &
+	 			\cellcolor[HTML]{FFFFC7} \\ \cline{3-3}
+	 			\multirow{-2}{*}{\cellcolor[HTML]{EFEFEF}\begin{tabular}[c]{@{}c@{}}Кадровая\\ служба\end{tabular}} &
+	 			\multirow{-2}{*}{\cellcolor[HTML]{FFFFC7}READ} &
+	 			\begin{tabular}[c]{@{}c@{}}READ\\ Остальное\end{tabular} &
+	 			\multirow{-2}{*}{\cellcolor[HTML]{FFFFC7}READ} &
+	 			\multirow{-2}{*}{\cellcolor[HTML]{FFFFC7}READ} \\ \hline
+	 			\cellcolor[HTML]{EFEFEF} &
+	 			\cellcolor[HTML]{FFFFC7} &
+	 			\cellcolor[HTML]{D9FFD8}\begin{tabular}[c]{@{}c@{}}EDIT\\ Студенты\end{tabular} &
+	 			\cellcolor[HTML]{FFFFC7} &
+	 			\cellcolor[HTML]{FFFFC7} \\ \cline{3-3}
+	 			\multirow{-2}{*}{\cellcolor[HTML]{EFEFEF}\begin{tabular}[c]{@{}c@{}}Приемная\\ комиссия\end{tabular}} &
+	 			\multirow{-2}{*}{\cellcolor[HTML]{FFFFC7}READ} &
+	 			\begin{tabular}[c]{@{}c@{}}READ\\ Остальное\end{tabular} &
+	 			\multirow{-2}{*}{\cellcolor[HTML]{FFFFC7}READ} &
+	 			\multirow{-2}{*}{\cellcolor[HTML]{FFFFC7}READ} \\ \hline
+	 			\begin{tabular}[c]{@{}c@{}}Учебное\\ управление\end{tabular} &
+	 			READ &
+	 			READ &
+	 			READ &
+	 			\cellcolor[HTML]{D9FFD8}EDIT \\ \hline
+	 			Преподаватели &
+	 			READ &
+	 			READ &
+	 			READ &
+	 			\cellcolor[HTML]{D9FFD8}EDIT \\ \hline
+	 			Студенты &
+	 			READ &
+	 			READ &
+	 			READ &
+	 			READ \\ \hline
+	 		\end{tabular}
+	 	\end{table}
+	 }{Права ролей}
+	 
+	 Начнем с \textit{административной структуры}, которая будет представлять из себя набор инструментов для просмотра и редактирования факультетов и направлений обучения. Далее \textit{персоналии} --- раздел с лицами института, преподавателями и студентами. \textit{Учебный план} будет набором инструментов планирования курсов, расписания и предметов с учетом распределения нагрузки и занятости преподавателей и студентов. Наконец, \textit{журнал} --- система учета успеваемости обучающихся.
+	 
+	 \subsection{Макеты UI}
+	 
+	 Прикинем примерный интерфейс соответствующих инструментов.
+	 
+	 \subsubsection{Административная структура}
+	 
+	 \embedsvg{admin.svg}{0.7}{UI административная структура}
+	 
+	 \begin{enumerate}
+	 	\item Navigation drawer -- навигация по сайту (не требует бек)
+	 	\item ImageButton -- переход в личный кабинет (требует информацию о пользователе)
+	 	\item Toolbar -- инструменты фильтрации и настройки глубины графа (требует фильтры на сущности)
+	 	\item Graph -- рабочее поле с возможностью перехода на страницы соответствующих звеньев (требует данные о сущностях)
+	 \end{enumerate}
+	 
+	 \subsubsection{Персоналии}
+	 
+	 \embedsvg{people.svg}{0.7}{UI персоналии}
+	 
+	 \begin{enumerate}
+	 	\item Navigation drawer -- навигация по сайту (не требует бек)
+	 	\item ImageButton -- переход в личный кабинет (требует информацию о пользователе)
+	 	\item Toolbar -- инструменты фильтрации  и выборки (требует фильтры на сущности)
+	 	\item List -- рабочее поле с возможностью перехода на страницы соответствующих персон (требует данные о сущностях)
+	 \end{enumerate}
+	 
+	 \subsubsection{Учебный план}
+	 
+	 \embedsvg{plan.svg}{0.7}{UI учебный план}
+	 
+	 \begin{enumerate}
+	 	\item Navigation drawer -- навигация по сайту (не требует бек)
+	 	\item ImageButton -- переход в личный кабинет (требует информацию о пользователе)
+	 	\item Toolbar -- инструменты фильтрации и выборки (требует фильтры на сущности)
+	 	\item Table -- рабочее поле, сводная таблица учебного плана (требует данные о сущностях)
+	 \end{enumerate}
+	 
+	 	 \subsubsection{Журнал}
+	 
+	 \embedsvg{plan.svg}{0.7}{UI журнал}
+	 
+	 \begin{enumerate}
+	 	\item Navigation drawer -- навигация по сайту (не требует бек)
+	 	\item ImageButton -- переход в личный кабинет (требует информацию о пользователе)
+	 	\item Toolbar -- инструменты фильтрации и выборки (требует фильтры на сущности)
+	 	\item Table -- рабочее поле, таблица успеваемости студентов в группе  (требует данные о сущностях)
+	 \end{enumerate}
+	 
+	 \section{Проектирование API}
+	 
+	 \subsection{Выявление достаточных DTO}
+	 
+	 Рассмотрим, какая информация необходима нашему UI для его работы, и отобразим, какие поля должны быть у наших DTO, чтобы эту информацию доставить.
+	 
+	  \subsubsection{Административная структура}
+	  
+	 	 \embedsvg{admin_dto.svg}{0.7}{DTO административная структура} 
+	 
+\end{document}

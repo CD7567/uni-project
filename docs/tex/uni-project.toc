@@ -1,0 +1,12 @@
+\babel@toc {russian}{}\relax 
+\contentsline {section}{\numberline {1.\relax }Проектирование макета сервиса}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1.\relax }Постановка задачи}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2.\relax }Анализ ролевой модели}{3}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3.\relax }Макеты UI}{4}{subsection.1.3}%
+\contentsline {subsubsection}{\numberline {1.3.1.\relax }Административная структура}{4}{subsubsection.1.3.1}%
+\contentsline {subsubsection}{\numberline {1.3.2.\relax }Персоналии}{5}{subsubsection.1.3.2}%
+\contentsline {subsubsection}{\numberline {1.3.3.\relax }Учебный план}{5}{subsubsection.1.3.3}%
+\contentsline {subsubsection}{\numberline {1.3.4.\relax }Журнал}{6}{subsubsection.1.3.4}%
+\contentsline {section}{\numberline {2.\relax }Проектирование API}{6}{section.2}%
+\contentsline {subsection}{\numberline {2.1.\relax }Выявление достаточных DTO}{6}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1.\relax }Административная структура}{6}{subsubsection.2.1.1}%
