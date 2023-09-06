@@ -1,10 +1,15 @@
 package com.cd7567.services;
 
+import com.cd7567.dto.course.CoursePutDTO;
 import com.cd7567.dto.professor.ProfessorBriefGetDTO;
 import com.cd7567.dto.professor.ProfessorMapper;
+import com.cd7567.dto.professor.ProfessorPutDTO;
+import com.cd7567.entities.Course;
+import com.cd7567.entities.Professor;
 import com.cd7567.repositories.ProfessorRepo;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -26,5 +31,12 @@ public class ProfessorService {
 
     public List<ProfessorBriefGetDTO> getSeminaristsBySubjectId(Long id) {
         return professorMapper.toBriefDTO(professorRepo.getSeminaristsBySubjectId(id));
+    }
+
+    @Transactional
+    public Long persistFromDTO(ProfessorPutDTO dto) {
+        Professor professor = professorMapper.fromPutDTO(dto);
+        professorRepo.persist(professor);
+        return professor.getId();
     }
 }

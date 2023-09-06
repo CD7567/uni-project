@@ -1,14 +1,15 @@
 package com.cd7567;
 
 import com.cd7567.dto.professor.ProfessorBriefGetDTO;
+import com.cd7567.dto.scoreboard.ScorePutDTO;
+import com.cd7567.dto.studentplan.StudentPlanPutDTO;
 import com.cd7567.dto.subject.SubjectInfoGetDTO;
+import com.cd7567.dto.subject.SubjectPutDTO;
 import com.cd7567.services.ProfessorService;
+import com.cd7567.services.StudentPlanService;
 import com.cd7567.services.SubjectService;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
 import java.util.List;
@@ -20,6 +21,9 @@ public class StudyPlanResource {
 
     @Inject
     ProfessorService professorService;
+
+    @Inject
+    StudentPlanService studentPlanService;
 
     @GET
     @Path("/subject/faculty")
@@ -64,5 +68,19 @@ public class StudyPlanResource {
             @QueryParam("id") Long id
     ) {
         return professorService.getLecturersBySubjectId(id);
+    }
+
+    @PUT
+    @Path("/student/plan")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Long persistStudentPlan(StudentPlanPutDTO dto) {
+        return studentPlanService.persistFromDTO(dto);
+    }
+
+    @PUT
+    @Path("/subject")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Long persistScoreRecord(SubjectPutDTO dto) {
+        return subjectService.persistFromDTO(dto);
     }
 }

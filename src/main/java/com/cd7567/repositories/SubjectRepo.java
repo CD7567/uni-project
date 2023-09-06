@@ -1,8 +1,10 @@
 package com.cd7567.repositories;
 
+import com.cd7567.entities.Group;
 import com.cd7567.entities.Subject;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -42,5 +44,11 @@ public class SubjectRepo implements PanacheRepository<Subject> {
                 WHERE c.id = ?1
                 """, courseId
         ).list();
+    }
+
+    @Transactional
+    public Long update(Subject subject) {
+        persist(subject);
+        return subject.getId();
     }
 }

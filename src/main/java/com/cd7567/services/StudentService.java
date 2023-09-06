@@ -1,12 +1,13 @@
 package com.cd7567.services;
 
-import com.cd7567.dto.student.StudentBriefGetDTO;
-import com.cd7567.dto.student.StudentInfoGetDTO;
-import com.cd7567.dto.student.StudentMapper;
-import com.cd7567.dto.student.StudentMarkGetDTO;
+import com.cd7567.dto.course.CoursePutDTO;
+import com.cd7567.dto.student.*;
+import com.cd7567.entities.Course;
+import com.cd7567.entities.Student;
 import com.cd7567.repositories.StudentRepo;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -44,5 +45,12 @@ public class StudentService {
 
     public List<StudentMarkGetDTO> getByLecturerId(Long id) {
         return studentMapper.toMarkDTO(studentRepo.getByLecturerId(id));
+    }
+
+    @Transactional
+    public Long persistFromDTO(StudentPutDTO dto) {
+        Student student = studentMapper.fromPutDTO(dto);
+        studentRepo.persist(student);
+        return student.getId();
     }
 }

@@ -11,7 +11,7 @@ public class StudentPlanRecord {
             generator = "study_plan_id_generator"
     )
     @SequenceGenerator(
-            name = "person_id_generator",
+            name = "study_plan_id_generator",
             sequenceName = "STUDY_PLAN_ID",
             allocationSize = 20
     )

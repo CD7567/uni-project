@@ -1,33 +1,42 @@
 package com.cd7567.services;
 
 import com.cd7567.dto.faculty.*;
+import com.cd7567.entities.Faculty;
 import com.cd7567.repositories.FacultyRepo;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
 @ApplicationScoped
 public class FacultyService {
     @Inject
-    FacultyMapper mapper;
+    FacultyMapper facultyMapper;
 
     @Inject
     FacultyRepo facultyRepo;
 
     public List<FacultyBriefGetDTO> getFacultiesBriefDTO() {
-        return mapper.toBriefDTO(facultyRepo.listAll());
+        return facultyMapper.toBriefDTO(facultyRepo.listAll());
     }
 
     public List<FacultyCourseGetDTO> getFacultiesCourseDTO() {
-        return mapper.toCourseDTO(facultyRepo.listAll());
+        return facultyMapper.toCourseDTO(facultyRepo.listAll());
     }
 
     public List<FacultyDirGetDTO> getFacultiesDirDTO() {
-        return mapper.toDirDTO(facultyRepo.listAll());
+        return facultyMapper.toDirDTO(facultyRepo.listAll());
     }
 
     public List<FacultySubjectGetDTO> getFacultiesSubjectDTO() {
-        return mapper.toSubjectDTO(facultyRepo.listAll());
+        return facultyMapper.toSubjectDTO(facultyRepo.listAll());
+    }
+
+    @Transactional
+    public Long persistFromDTO(FacultyPutDTO dto) {
+        Faculty faculty = facultyMapper.fromPutDTO(dto);
+        facultyRepo.persist(faculty);
+        return faculty.getId();
     }
 }

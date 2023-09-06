@@ -1,8 +1,11 @@
 package com.cd7567.dto.faculty;
 
+import com.cd7567.dto.course.CoursePutDTO;
 import com.cd7567.dto.direction.DirectionMapper;
 import com.cd7567.dto.professor.ProfessorMapper;
+import com.cd7567.entities.Course;
 import com.cd7567.entities.Faculty;
+import com.cd7567.repositories.ReferenceLoader;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -13,7 +16,8 @@ import java.util.Set;
         componentModel = "jakarta",
         uses = {
                 ProfessorMapper.class,
-                DirectionMapper.class
+                DirectionMapper.class,
+                ReferenceLoader.class
         }
 )
 public interface FacultyMapper {
@@ -51,4 +55,21 @@ public interface FacultyMapper {
 
     List<FacultySubjectGetDTO> toSubjectDTO(List<Faculty> faculties);
     Set<FacultySubjectGetDTO> toSubjectDTO(Set<Faculty> faculties);
+
+    @Mapping(target = "id", source = "dto.id")
+    @Mapping(target = "name", source = "dto.name")
+    @Mapping(
+            target = "director",
+            source = "dto.directorId",
+            qualifiedByName = {"ReferenceLoader", "getProfessorReferenceById"}
+    )
+    @Mapping(
+            target = "directions",
+            source = "dto.directionIds",
+            qualifiedByName = {"ReferenceLoader", "getDirectionReferenceById"}
+    )
+    Faculty fromPutDTO(FacultyPutDTO dto);
+
+    List<Faculty> fromPutDTO(List<FacultyPutDTO> dto);
+    Set<Faculty> fromPutDTO(Set<FacultyPutDTO> dto);
 }

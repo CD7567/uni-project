@@ -1,15 +1,13 @@
 package com.cd7567;
 
 import com.cd7567.dto.scoreboard.ScoreBriefGetDTO;
+import com.cd7567.dto.scoreboard.ScorePutDTO;
 import com.cd7567.dto.scoreboard.ScoreStudentGetDTO;
 import com.cd7567.dto.student.StudentMarkGetDTO;
 import com.cd7567.services.ScoreBoardService;
 import com.cd7567.services.StudentService;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
 import java.util.List;
@@ -23,7 +21,7 @@ public class JournalResource {
     ScoreBoardService scoreBoardService;
 
     @GET
-    @Path("/student/seminarist")
+    @Path("/seminarist/students")
     @Produces(MediaType.APPLICATION_JSON)
     public List<StudentMarkGetDTO> getStudentsBySeminaristId(
             @QueryParam("id") Long id
@@ -32,7 +30,7 @@ public class JournalResource {
     }
 
     @GET
-    @Path("/student/lecturer")
+    @Path("/lecturer/students")
     @Produces(MediaType.APPLICATION_JSON)
     public List<StudentMarkGetDTO> getStudentsByLecturerId(
             @QueryParam("id") Long id
@@ -41,7 +39,7 @@ public class JournalResource {
     }
 
     @GET
-    @Path("/mark/student")
+    @Path("/student/mark")
     @Produces(MediaType.APPLICATION_JSON)
     public List<ScoreBriefGetDTO> getMarkByStudentId(
             @QueryParam("id") Long id
@@ -50,11 +48,18 @@ public class JournalResource {
     }
 
     @GET
-    @Path("/mark/group")
+    @Path("/group/mark")
     @Produces(MediaType.APPLICATION_JSON)
     public List<ScoreStudentGetDTO> getMarkByGroupId(
             @QueryParam("id") Long id
     ) {
         return scoreBoardService.getByGroupId(id);
+    }
+
+    @PUT
+    @Path("/mark")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Long persistScoreRecord(ScorePutDTO dto) {
+        return scoreBoardService.persistFromDTO(dto);
     }
 }

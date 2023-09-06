@@ -1,8 +1,10 @@
 package com.cd7567.repositories;
 
+import com.cd7567.entities.Group;
 import com.cd7567.entities.Student;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -75,5 +77,11 @@ public class StudentRepo implements PanacheRepository<Student> {
                 WHERE lect.id = ?1
                 """, id
         ).list();
+    }
+
+    @Transactional
+    public Long update(Student student) {
+        persist(student);
+        return student.getId();
     }
 }

@@ -1,6 +1,7 @@
 package com.cd7567.dto.person;
 
 import com.cd7567.entities.Person;
+import com.cd7567.repositories.ReferenceLoader;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -8,7 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 @Mapper(
-        componentModel = "jakarta"
+        componentModel = "jakarta",
+        uses = ReferenceLoader.class
 )
 public interface PersonMapper {
     @Mapping(target = "id", source = "person.id")
