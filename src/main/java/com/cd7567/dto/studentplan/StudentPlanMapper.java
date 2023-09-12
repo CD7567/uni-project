@@ -29,7 +29,7 @@ public interface StudentPlanMapper {
     @Mapping(target = "id", source = "dto.id")
     @Mapping(
             target = "lecturer",
-            source = "record.lecturerId",
+            source = "dto.lecturerId",
             qualifiedByName = {"ReferenceLoader", "getProfessorReferenceById"}
     )
     @Mapping(

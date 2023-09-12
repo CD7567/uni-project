@@ -1,6 +1,7 @@
 package com.cd7567.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Formula;
 
 @Entity
 @Table(name = "SCOREBOARD")
