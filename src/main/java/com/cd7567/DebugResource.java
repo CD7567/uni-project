@@ -19,8 +19,10 @@ import com.cd7567.dto.subject.SubjectBriefGetDTO;
 import com.cd7567.dto.subject.SubjectMapper;
 import com.cd7567.entities.*;
 import com.cd7567.repositories.*;
+import io.quarkus.arc.profile.IfBuildProfile;
 import jakarta.enterprise.inject.Typed;
 import jakarta.inject.Inject;
+import jakarta.inject.Scope;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Tuple;
 import jakarta.persistence.TypedQuery;
@@ -39,6 +41,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 @Path("/debug")
+@IfBuildProfile("dev")
 public class DebugResource {
     @Inject
     EntityManager entityManager;

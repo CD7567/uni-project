@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  postgresql-data:
+    image: postgres:latest
+    container_name: uni-service-postgres
+    restart: unless-stopped
+    ports:
+      - 32770:5432
+    environment:
+      POSTGRES_USER: backend
+      POSTGRES_PASSWORD: backend
+      POSTGRES_DB: uni-project-db
+    volumes:
+      - uni-service-postgres-volume:/var/lib/postgresql/data
+
+  postgres-keycloak:
+    image: postgres:latest
+    container_name: uni-keycloak-postgres
+    restart: unless-stopped
+    ports:
+      - 32771:5432
+    environment:
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+      POSTGRES_DB: uni-keycloak-db
+    volumes:
+      - uni-keycloak-postgres-volume:/var/lib/postgresql/data
+
+  keycloak:
+    image: jboss/keycloak:latest
+    container_name: uni-project_keycloak
+    restart: unless-stopped
+    ports:
+      - 8081:8080
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      DB_VENDOR: POSTGRES
+      DB_ADDR: uni-keycloak-postgres
+      DB_DATABASE: uni-keycloak-db
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
+
+  quarkus_app:
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile
+    container_name: uni-project-host
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+      - 8443:8443
+    depends_on:
+      - postgresql-data
+      - keycloak
+
+volumes:
+  uni-service-postgres-volume:
+  uni-keycloak-postgres-volume:

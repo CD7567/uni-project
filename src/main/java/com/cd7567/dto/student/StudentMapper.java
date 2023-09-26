@@ -5,6 +5,7 @@ import com.cd7567.dto.scoreboard.ScoreMapper;
 import com.cd7567.entities.Professor;
 import com.cd7567.entities.Student;
 import com.cd7567.repositories.ReferenceLoader;
+import jakarta.transaction.Transactional;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -18,6 +19,7 @@ import java.util.Set;
                 ReferenceLoader.class
         }
 )
+@Transactional(Transactional.TxType.MANDATORY)
 public interface StudentMapper {
     @Mapping(target = "id", source = "student.id")
     @Mapping(target = "name", expression = "java(student.getFirstName() + ' ' + student.getLastName())")

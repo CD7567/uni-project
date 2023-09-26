@@ -13,6 +13,8 @@ import com.cd7567.services.GroupService;
 import com.cd7567.services.PersonService;
 import com.cd7567.services.ProfessorService;
 import com.cd7567.services.StudentService;
+import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -20,6 +22,7 @@ import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("/people")
+@Authenticated
 public class PeopleResource {
     @Inject
     PersonService personService;
@@ -35,30 +38,35 @@ public class PeopleResource {
 
     @GET
     @Path("/person/brief")
+    @RolesAllowed("user")
     public List<PersonBriefGetDTO> getPeopleBrief() {
         return personService.getPeopleBrief();
     }
 
     @GET
     @Path("/person/info")
+    @RolesAllowed("user")
     public List<PersonInfoGetDTO> getPeopleInfo() {
         return personService.getPeopleInfo();
     }
 
     @GET
     @Path("/professor/brief")
+    @RolesAllowed("user")
     public List<ProfessorBriefGetDTO> getProfessorInfo() {
         return professorService.getBrief();
     }
 
     @GET
     @Path("/student/brief")
+    @RolesAllowed("user")
     public List<StudentBriefGetDTO> getStudentInfo() {
         return studentService.getBrief();
     }
 
     @GET
     @Path("/student/group")
+    @RolesAllowed("user")
     public List<StudentInfoGetDTO> getStudentByGroupId(
             @QueryParam("id") Long groupId
     ) {
@@ -67,6 +75,7 @@ public class PeopleResource {
 
     @GET
     @Path("/course/students")
+    @RolesAllowed("user")
     public List<StudentInfoGetDTO> getStudentByCourseId(
             @QueryParam("id") Long courseId
     ) {
@@ -75,6 +84,7 @@ public class PeopleResource {
 
     @GET
     @Path("/subject/students")
+    @RolesAllowed("user")
     public List<StudentInfoGetDTO> getStudentBySubjectId(
             @QueryParam("id") Long subjectId
     ) {
@@ -83,6 +93,7 @@ public class PeopleResource {
 
     @GET
     @Path("/term/students")
+    @RolesAllowed("user")
     public List<StudentInfoGetDTO> getStudentByGroupId(
             @QueryParam("term") Integer term
     ) {
@@ -91,6 +102,7 @@ public class PeopleResource {
 
     @PUT
     @Path("/professor")
+    @RolesAllowed("hr")
     @Produces(MediaType.TEXT_PLAIN)
     public Long persistProfessor(ProfessorPutDTO dto) {
         return professorService.persistFromDTO(dto);
@@ -98,6 +110,7 @@ public class PeopleResource {
 
     @PUT
     @Path("/student")
+    @RolesAllowed("hr")
     @Produces(MediaType.TEXT_PLAIN)
     public Long persistStudent(StudentPutDTO dto) {
         return studentService.persistFromDTO(dto);
@@ -105,6 +118,7 @@ public class PeopleResource {
 
     @PUT
     @Path("/group")
+    @RolesAllowed("hr")
     @Produces(MediaType.TEXT_PLAIN)
     public Long persistGroup(GroupPutDTO dto) {
         return groupService.persistFromDTO(dto);

@@ -50,6 +50,7 @@ public class StudentService {
     @Transactional
     public Long persistFromDTO(StudentPutDTO dto) {
         Student student = studentMapper.fromPutDTO(dto);
+        student.setVersion(1L);
         studentRepo.persist(student);
         return student.getId();
     }

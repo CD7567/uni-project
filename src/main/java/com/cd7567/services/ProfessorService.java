@@ -36,6 +36,7 @@ public class ProfessorService {
     @Transactional
     public Long persistFromDTO(ProfessorPutDTO dto) {
         Professor professor = professorMapper.fromPutDTO(dto);
+        if (professor.getVersion() == null) professor.setVersion(1L);
         professorRepo.persist(professor);
         return professor.getId();
     }
