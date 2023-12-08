@@ -1,0 +1,1543 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+
+    <!-- Initializing database -->
+    <changeSet id="1" author="admin">
+
+        <createTable tableName="PERSON">
+            <column name="ID" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PER_DISC" type="varchar(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FIRST_NAME" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LAST_NAME" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="POSITION" type="varchar(255)"/>
+        </createTable>
+
+
+        <createSequence sequenceName="PERSON_ID"
+                        minValue="1"
+                        startValue="20"
+                        incrementBy="20"/>
+
+
+
+        <createTable tableName="FACULTY">
+            <column name="ID" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DIRECTOR_ID" type="bigint">
+                <constraints foreignKeyName="FK_DIRECTOR_FACULTY"
+                             referencedTableName="PERSON"
+                             referencedColumnNames="ID"/>
+            </column>
+        </createTable>
+
+
+        <createSequence sequenceName="FACULTY_ID"
+                        minValue="1"
+                        startValue="3"
+                        incrementBy="20"/>
+
+
+        <createTable tableName="DIRECTION">
+            <column name="ID" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NUMBER" type="varchar(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FACULTY_ID" type="bigint">
+                <constraints foreignKeyName="FK_FACULTY_DIRECTION"
+                             referencedTableName="FACULTY"
+                             referencedColumnNames="ID"/>
+            </column>
+        </createTable>
+
+
+        <createSequence sequenceName="DIRECTION_ID"
+                        minValue="1"
+                        startValue="4"
+                        incrementBy="20"/>
+
+
+        <createTable tableName="COURSE">
+            <column name="ID" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DIRECTION_ID" type="bigint">
+                <constraints foreignKeyName="FK_DIRECTION_COURSE"
+                             referencedTableName="DIRECTION"
+                             referencedColumnNames="ID"/>
+            </column>
+            <column name="CHIEF_ID" type="bigint">
+                <constraints foreignKeyName="FK_CHIEF_COURSE"
+                             referencedTableName="PERSON"
+                             referencedColumnNames="ID"/>
+            </column>
+        </createTable>
+
+
+        <createSequence sequenceName="COURSE_ID"
+                        minValue="1"
+                        startValue="8"
+                        incrementBy="20"/>
+
+
+        <createTable tableName="STUDYGROUP">
+            <column name="ID" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NUMBER" type="varchar(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TERM" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DIRECTION_ID" type="bigint">
+                <constraints foreignKeyName="FK_DIRECTION_STUDYGROUP"
+                             referencedTableName="DIRECTION"
+                             referencedColumnNames="ID"/>
+            </column>
+        </createTable>
+
+
+        <createSequence sequenceName="GROUP_ID"
+                        minValue="1"
+                        startValue="7"
+                        incrementBy="20"/>
+
+        <addColumn tableName="PERSON">
+            <column name="GROUP_ID" type="bigint">
+                <constraints foreignKeyName="FK_GROUP_PERSON"
+                             referencedTableName="STUDYGROUP"
+                             referencedColumnNames="ID"/>
+            </column>
+        </addColumn>
+
+
+        <createTable tableName="STUDENT_COURSE">
+            <column name="PERSON_ID" type="bigint">
+                <constraints foreignKeyName="FK_STUDENT_COURSE_PERSON"
+                             referencedTableName="PERSON"
+                             referencedColumnNames="ID"/>
+            </column>
+            <column name="COURSE_ID" type="bigint">
+                <constraints foreignKeyName="FK_STUDENT_COURSE_COURSE"
+                             referencedTableName="COURSE"
+                             referencedColumnNames="ID"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="SEMINARIST_COURSE">
+            <column name="PERSON_ID" type="bigint">
+                <constraints foreignKeyName="FK_SEMINARIST_COURSE_PERSON"
+                             referencedTableName="PERSON"
+                             referencedColumnNames="ID"/>
+            </column>
+            <column name="COURSE_ID" type="bigint">
+                <constraints foreignKeyName="FK_SEMINARIST_COURSE_COURSE"
+                             referencedTableName="COURSE"
+                             referencedColumnNames="ID"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="LECTURER_COURSE">
+            <column name="PERSON_ID" type="bigint">
+                <constraints foreignKeyName="FK_LECTURER_COURSE_PERSON"
+                             referencedTableName="PERSON"
+                             referencedColumnNames="ID"/>
+            </column>
+            <column name="COURSE_ID" type="bigint">
+                <constraints foreignKeyName="FK_LECTURER_COURSE_COURSE"
+                             referencedTableName="COURSE"
+                             referencedColumnNames="ID"/>
+            </column>
+        </createTable>
+
+
+        <createTable tableName="SUBJECT">
+            <column name="ID" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TERM" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE" type="varchar(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="HOURS" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MARK_WAY" type="varchar(16)"/>
+            <column name="COURSE_ID" type="bigint">
+                <constraints foreignKeyName="FK_COURSE_SUBJECT"
+                             referencedTableName="COURSE"
+                             referencedColumnNames="ID"/>
+            </column>
+        </createTable>
+
+
+        <createSequence sequenceName="SUBJECT_ID"
+                        minValue="1"
+                        startValue="12"
+                        incrementBy="20"/>
+
+
+        <createTable tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STUDENT_ID" type="bigint">
+                <constraints foreignKeyName="FK_STUDENT_STUDY_PLAN_STUDENT"
+                             referencedTableName="PERSON"
+                             referencedColumnNames="ID"/>
+            </column>
+            <column name="SUBJECT_ID" type="bigint">
+                <constraints foreignKeyName="FK_STUDENT_STUDY_PLAN_SUBJECT"
+                             referencedTableName="SUBJECT"
+                             referencedColumnNames="ID"/>
+            </column>
+            <column name="LECTURER_ID" type="bigint">
+                <constraints foreignKeyName="FK_STUDENT_STUDY_PLAN_LECTURER"
+                             referencedTableName="PERSON"
+                             referencedColumnNames="ID"/>
+            </column>
+            <column name="SEMINARIST_ID" type="bigint">
+                <constraints foreignKeyName="FK_STUDENT_STUDY_PLAN_SEMINARIST"
+                             referencedTableName="PERSON"
+                             referencedColumnNames="ID"/>
+            </column>
+        </createTable>
+
+
+        <createSequence sequenceName="STUDY_PLAN_ID"
+                        minValue="1"
+                        startValue="12"
+                        incrementBy="20"/>
+
+
+
+        <createTable tableName="SCOREBOARD">
+            <column name="ID" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MARK" type="integer"/>
+            <column name="STUDENT_ID" type="bigint">
+                <constraints foreignKeyName="FK_STUDENT_SCOREBOARD"
+                             referencedTableName="PERSON"
+                             referencedColumnNames="ID"/>
+            </column>
+            <column name="SUBJECT_ID" type="bigint">
+                <constraints foreignKeyName="FK_SUBJECT_SCOREBOARD"
+                             referencedTableName="SUBJECT"
+                             referencedColumnNames="ID"/>
+            </column>
+        </createTable>
+
+
+        <createSequence sequenceName="BOARD_ID"
+                        minValue="1"
+                        startValue="43"
+                        incrementBy="20"/>
+    </changeSet>
+
+
+    <!-- Filling professors of PERSON table -->
+    <changeSet id="2" author="admin">
+        <insert tableName="PERSON">
+            <column name="ID" value="13"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="PROF"/>
+            <column name="FIRST_NAME" value="Dominic"/>
+            <column name="LAST_NAME" value="Marks"/>
+            <column name="POSITION" value="Professor"/>
+            <column name="GROUP_ID" value="NULL"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="14"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="PROF"/>
+            <column name="FIRST_NAME" value="Mya"/>
+            <column name="LAST_NAME" value="Calderon"/>
+            <column name="POSITION" value="Professor"/>
+            <column name="GROUP_ID" value="NULL"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="15"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="PROF"/>
+            <column name="FIRST_NAME" value="Amirah"/>
+            <column name="LAST_NAME" value="Sutherland"/>
+            <column name="POSITION" value="Professor"/>
+            <column name="GROUP_ID" value="NULL"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="16"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="PROF"/>
+            <column name="FIRST_NAME" value="Zachary"/>
+            <column name="LAST_NAME" value="Montoya"/>
+            <column name="POSITION" value="Professor"/>
+            <column name="GROUP_ID" value="NULL"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="17"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="PROF"/>
+            <column name="FIRST_NAME" value="Charlie"/>
+            <column name="LAST_NAME" value="Morse"/>
+            <column name="POSITION" value="Professor"/>
+            <column name="GROUP_ID" value="NULL"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="18"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="PROF"/>
+            <column name="FIRST_NAME" value="Sebastien"/>
+            <column name="LAST_NAME" value="Rivers"/>
+            <column name="POSITION" value="Professor"/>
+            <column name="GROUP_ID" value="NULL"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="19"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="PROF"/>
+            <column name="FIRST_NAME" value="Leyla"/>
+            <column name="LAST_NAME" value="Middleton"/>
+            <column name="POSITION" value="Professor"/>
+            <column name="GROUP_ID" value="NULL"/>
+        </insert>
+    </changeSet>
+
+
+    <!-- Filling FACULTY table -->
+    <changeSet id="3" author="admin">
+        <insert tableName="FACULTY">
+            <column name="ID" value="1"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="School of applied mathematics and physics"/>
+            <column name="DIRECTOR_ID" value="13"/>
+        </insert>
+        <insert tableName="FACULTY">
+            <column name="ID" value="2"/>
+            <column name="VERSION" value="2"/>
+            <column name="NAME" value="School of common and applied physics"/>
+            <column name="DIRECTOR_ID" value="14"/>
+        </insert>
+    </changeSet>
+
+
+    <!-- Filling DIRECTION table -->
+    <changeSet id="4" author="admin">
+        <insert tableName="DIRECTION">
+            <column name="ID" value="1"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Applied mathematics and physics"/>
+            <column name="NUMBER" value="03.03.01"/>
+            <column name="FACULTY_ID" value="1"/>
+        </insert>
+        <insert tableName="DIRECTION">
+            <column name="ID" value="2"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Computer technologies"/>
+            <column name="NUMBER" value="03.03.01"/>
+            <column name="FACULTY_ID" value="1"/>
+        </insert>
+        <insert tableName="DIRECTION">
+            <column name="ID" value="3"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Common physics"/>
+            <column name="NUMBER" value="03.03.01"/>
+            <column name="FACULTY_ID" value="2"/>
+        </insert>
+    </changeSet>
+
+
+    <!-- Filling STUDYGROUP table -->
+    <changeSet id="5" author="admin">
+        <insert tableName="STUDYGROUP">
+            <column name="ID" value="1"/>
+            <column name="VERSION" value="1"/>
+            <column name="NUMBER" value="05-105"/>
+            <column name="TERM" value="1"/>
+            <column name="DIRECTION_ID" value="1"/>
+        </insert>
+        <insert tableName="STUDYGROUP">
+            <column name="ID" value="2"/>
+            <column name="VERSION" value="1"/>
+            <column name="NUMBER" value="05-106"/>
+            <column name="TERM" value="2"/>
+            <column name="DIRECTION_ID" value="1"/>
+        </insert>
+        <insert tableName="STUDYGROUP">
+            <column name="ID" value="3"/>
+            <column name="VERSION" value="1"/>
+            <column name="NUMBER" value="05-110"/>
+            <column name="TERM" value="3"/>
+            <column name="DIRECTION_ID" value="2"/>
+        </insert>
+        <insert tableName="STUDYGROUP">
+            <column name="ID" value="4"/>
+            <column name="VERSION" value="1"/>
+            <column name="NUMBER" value="05-111"/>
+            <column name="TERM" value="1"/>
+            <column name="DIRECTION_ID" value="2"/>
+        </insert>
+        <insert tableName="STUDYGROUP">
+            <column name="ID" value="5"/>
+            <column name="VERSION" value="1"/>
+            <column name="NUMBER" value="04-101"/>
+            <column name="TERM" value="2"/>
+            <column name="DIRECTION_ID" value="3"/>
+        </insert>
+        <insert tableName="STUDYGROUP">
+            <column name="ID" value="6"/>
+            <column name="VERSION" value="1"/>
+            <column name="NUMBER" value="04-102"/>
+            <column name="TERM" value="3"/>
+            <column name="DIRECTION_ID" value="3"/>
+        </insert>
+    </changeSet>
+
+
+    <!-- Filling students of PERSON table -->
+    <changeSet id="6" author="admin">
+        <insert tableName="PERSON">
+            <column name="ID" value="1"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="STUD"/>
+            <column name="FIRST_NAME" value="Sana"/>
+            <column name="LAST_NAME" value="McConnell"/>
+            <column name="POSITION" value="NULL"/>
+            <column name="GROUP_ID" value="1"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="2"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="STUD"/>
+            <column name="FIRST_NAME" value="Cayden"/>
+            <column name="LAST_NAME" value="Duncan"/>
+            <column name="POSITION" value="NULL"/>
+            <column name="GROUP_ID" value="1"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="3"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="STUD"/>
+            <column name="FIRST_NAME" value="Ammar"/>
+            <column name="LAST_NAME" value="Guerrero"/>
+            <column name="POSITION" value="NULL"/>
+            <column name="GROUP_ID" value="2"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="4"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="STUD"/>
+            <column name="FIRST_NAME" value="Ernest"/>
+            <column name="LAST_NAME" value="Archer"/>
+            <column name="POSITION" value="NULL"/>
+            <column name="GROUP_ID" value="2"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="5"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="STUD"/>
+            <column name="FIRST_NAME" value="Marianne"/>
+            <column name="LAST_NAME" value="McKey"/>
+            <column name="POSITION" value="NULL"/>
+            <column name="GROUP_ID" value="3"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="6"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="STUD"/>
+            <column name="FIRST_NAME" value="Brenda"/>
+            <column name="LAST_NAME" value="Petty"/>
+            <column name="POSITION" value="NULL"/>
+            <column name="GROUP_ID" value="3"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="7"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="STUD"/>
+            <column name="FIRST_NAME" value="Fay"/>
+            <column name="LAST_NAME" value="Delacruz"/>
+            <column name="POSITION" value="NULL"/>
+            <column name="GROUP_ID" value="4"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="8"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="STUD"/>
+            <column name="FIRST_NAME" value="Eesa"/>
+            <column name="LAST_NAME" value="Reilly"/>
+            <column name="POSITION" value="NULL"/>
+            <column name="GROUP_ID" value="4"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="9"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="STUD"/>
+            <column name="FIRST_NAME" value="Tia"/>
+            <column name="LAST_NAME" value="Chandler"/>
+            <column name="POSITION" value="NULL"/>
+            <column name="GROUP_ID" value="5"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="10"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="STUD"/>
+            <column name="FIRST_NAME" value="Tess"/>
+            <column name="LAST_NAME" value="Burnett"/>
+            <column name="POSITION" value="NULL"/>
+            <column name="GROUP_ID" value="5"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="11"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="STUD"/>
+            <column name="FIRST_NAME" value="Ernest"/>
+            <column name="LAST_NAME" value="Luna"/>
+            <column name="POSITION" value="NULL"/>
+            <column name="GROUP_ID" value="6"/>
+        </insert>
+        <insert tableName="PERSON">
+            <column name="ID" value="12"/>
+            <column name="VERSION" value="1"/>
+            <column name="PER_DISC" value="STUD"/>
+            <column name="FIRST_NAME" value="Mia"/>
+            <column name="LAST_NAME" value="Khalifa"/>
+            <column name="POSITION" value="NULL"/>
+            <column name="GROUP_ID" value="6"/>
+        </insert>
+
+    </changeSet>
+
+
+    <!-- Filling COURSE table -->
+    <changeSet id="7" author="admin">
+        <insert tableName="COURSE">
+            <column name="ID" value="1"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Mathematics for AMP"/>
+            <column name="DIRECTION_ID" value="1"/>
+            <column name="CHIEF_ID" value="13"/>
+        </insert>
+        <insert tableName="COURSE">
+            <column name="ID" value="2"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Mathematics for CT"/>
+            <column name="DIRECTION_ID" value="2"/>
+            <column name="CHIEF_ID" value="14"/>
+        </insert>
+        <insert tableName="COURSE">
+            <column name="ID" value="3"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Mathematics for PH"/>
+            <column name="DIRECTION_ID" value="3"/>
+            <column name="CHIEF_ID" value="15"/>
+        </insert>
+        <insert tableName="COURSE">
+            <column name="ID" value="4"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Physics for AMP"/>
+            <column name="DIRECTION_ID" value="1"/>
+            <column name="CHIEF_ID" value="16"/>
+        </insert>
+        <insert tableName="COURSE">
+            <column name="ID" value="5"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Computer science"/>
+            <column name="DIRECTION_ID" value="2"/>
+            <column name="CHIEF_ID" value="17"/>
+        </insert>
+        <insert tableName="COURSE">
+            <column name="ID" value="6"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Physics for PH"/>
+            <column name="DIRECTION_ID" value="3"/>
+            <column name="CHIEF_ID" value="18"/>
+        </insert>
+        <insert tableName="COURSE">
+            <column name="ID" value="7"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="EXTRA combinatorics"/>
+            <column name="DIRECTION_ID" value="3"/>
+            <column name="CHIEF_ID" value="19"/>
+        </insert>
+    </changeSet>
+
+
+    <!-- Filling SUBJECT table -->
+    <changeSet id="8" author="admin">
+        <insert tableName="SUBJECT">
+            <column name="ID" value="1"/>
+            <column name="VERSION" value="1"/>
+            <column name="COURSE_ID" value="1"/>
+            <column name="HOURS" value="60"/>
+            <column name="NAME" value="Mathematical analysis"/>
+            <column name="TERM" value="1"/>
+            <column name="TYPE" value="OBLIGATORY"/>
+            <column name="MARK_WAY" value="EXAM"/>
+        </insert>
+        <insert tableName="SUBJECT">
+            <column name="ID" value="2"/>
+            <column name="VERSION" value="1"/>
+            <column name="COURSE_ID" value="1"/>
+            <column name="HOURS" value="60"/>
+            <column name="NAME" value="Field theory"/>
+            <column name="TERM" value="2"/>
+            <column name="TYPE" value="OBLIGATORY"/>
+            <column name="MARK_WAY" value="EXAM"/>
+        </insert>
+
+        <insert tableName="SUBJECT">
+            <column name="ID" value="3"/>
+            <column name="VERSION" value="1"/>
+            <column name="COURSE_ID" value="2"/>
+            <column name="HOURS" value="60"/>
+            <column name="NAME" value="Mathematical analysis"/>
+            <column name="TERM" value="1"/>
+            <column name="TYPE" value="OBLIGATORY"/>
+            <column name="MARK_WAY" value="EXAM"/>
+        </insert>
+
+        <insert tableName="SUBJECT">
+            <column name="ID" value="4"/>
+            <column name="VERSION" value="1"/>
+            <column name="COURSE_ID" value="3"/>
+            <column name="HOURS" value="60"/>
+            <column name="NAME" value="Mathematical analysis"/>
+            <column name="TERM" value="1"/>
+            <column name="TYPE" value="OBLIGATORY"/>
+            <column name="MARK_WAY" value="EXAM"/>
+        </insert>
+        <insert tableName="SUBJECT">
+            <column name="ID" value="5"/>
+            <column name="VERSION" value="1"/>
+            <column name="COURSE_ID" value="3"/>
+            <column name="HOURS" value="60"/>
+            <column name="NAME" value="Field theory"/>
+            <column name="TERM" value="2"/>
+            <column name="TYPE" value="OBLIGATORY"/>
+            <column name="MARK_WAY" value="EXAM"/>
+        </insert>
+
+        <insert tableName="SUBJECT">
+            <column name="ID" value="6"/>
+            <column name="VERSION" value="1"/>
+            <column name="COURSE_ID" value="4"/>
+            <column name="HOURS" value="60"/>
+            <column name="NAME" value="Mechanics"/>
+            <column name="TERM" value="1"/>
+            <column name="TYPE" value="OBLIGATORY"/>
+            <column name="MARK_WAY" value="EXAM"/>
+        </insert>
+        <insert tableName="SUBJECT">
+            <column name="ID" value="7"/>
+            <column name="VERSION" value="1"/>
+            <column name="COURSE_ID" value="4"/>
+            <column name="HOURS" value="60"/>
+            <column name="NAME" value="Thermodynamics"/>
+            <column name="TERM" value="2"/>
+            <column name="TYPE" value="OBLIGATORY"/>
+            <column name="MARK_WAY" value="EXAM"/>
+        </insert>
+
+        <insert tableName="SUBJECT">
+            <column name="ID" value="8"/>
+            <column name="VERSION" value="1"/>
+            <column name="COURSE_ID" value="6"/>
+            <column name="HOURS" value="60"/>
+            <column name="NAME" value="Mechanics"/>
+            <column name="TERM" value="1"/>
+            <column name="TYPE" value="OBLIGATORY"/>
+            <column name="MARK_WAY" value="EXAM"/>
+        </insert>
+        <insert tableName="SUBJECT">
+            <column name="ID" value="9"/>
+            <column name="VERSION" value="1"/>
+            <column name="COURSE_ID" value="6"/>
+            <column name="HOURS" value="60"/>
+            <column name="NAME" value="Thermodynamics"/>
+            <column name="TERM" value="2"/>
+            <column name="TYPE" value="OBLIGATORY"/>
+            <column name="MARK_WAY" value="EXAM"/>
+        </insert>
+
+        <insert tableName="SUBJECT">
+            <column name="ID" value="10"/>
+            <column name="VERSION" value="1"/>
+            <column name="COURSE_ID" value="5"/>
+            <column name="HOURS" value="60"/>
+            <column name="NAME" value="Computer science"/>
+            <column name="TERM" value="1"/>
+            <column name="TYPE" value="OBLIGATORY"/>
+            <column name="MARK_WAY" value="EXAM"/>
+        </insert>
+
+        <insert tableName="SUBJECT">
+            <column name="ID" value="11"/>
+            <column name="VERSION" value="1"/>
+            <column name="COURSE_ID" value="7"/>
+            <column name="HOURS" value="60"/>
+            <column name="NAME" value="Combinatorics"/>
+            <column name="TERM" value="2"/>
+            <column name="TYPE" value="EXTRA"/>
+            <column name="MARK_WAY" value="RATING"/>
+        </insert>
+    </changeSet>
+
+
+    <!-- Filling STUDENT_COURSE table -->
+    <changeSet id="9" author="admin">
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="1"/>
+            <column name="PERSON_ID" value="1"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="4"/>
+            <column name="PERSON_ID" value="1"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="1"/>
+            <column name="PERSON_ID" value="2"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="4"/>
+            <column name="PERSON_ID" value="2"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="1"/>
+            <column name="PERSON_ID" value="3"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="4"/>
+            <column name="PERSON_ID" value="3"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="1"/>
+            <column name="PERSON_ID" value="4"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="4"/>
+            <column name="PERSON_ID" value="4"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="2"/>
+            <column name="PERSON_ID" value="5"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="5"/>
+            <column name="PERSON_ID" value="5"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="2"/>
+            <column name="PERSON_ID" value="6"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="5"/>
+            <column name="PERSON_ID" value="6"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="2"/>
+            <column name="PERSON_ID" value="7"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="5"/>
+            <column name="PERSON_ID" value="7"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="2"/>
+            <column name="PERSON_ID" value="8"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="5"/>
+            <column name="PERSON_ID" value="8"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="3"/>
+            <column name="PERSON_ID" value="9"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="6"/>
+            <column name="PERSON_ID" value="9"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="3"/>
+            <column name="PERSON_ID" value="10"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="6"/>
+            <column name="PERSON_ID" value="10"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="3"/>
+            <column name="PERSON_ID" value="11"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="6"/>
+            <column name="PERSON_ID" value="11"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="7"/>
+            <column name="PERSON_ID" value="11"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="3"/>
+            <column name="PERSON_ID" value="12"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="6"/>
+            <column name="PERSON_ID" value="12"/>
+        </insert>
+        <insert tableName="STUDENT_COURSE">
+            <column name="COURSE_ID" value="7"/>
+            <column name="PERSON_ID" value="12"/>
+        </insert>
+    </changeSet>
+
+
+    <!-- Filling LECTURER_COURSE table -->
+    <changeSet id="10" author="admin">
+        <insert tableName="LECTURER_COURSE">
+            <column name="COURSE_ID" value="1"/>
+            <column name="PERSON_ID" value="13"/>
+        </insert>
+        <insert tableName="LECTURER_COURSE">
+            <column name="COURSE_ID" value="2"/>
+            <column name="PERSON_ID" value="14"/>
+        </insert>
+        <insert tableName="LECTURER_COURSE">
+            <column name="COURSE_ID" value="3"/>
+            <column name="PERSON_ID" value="15"/>
+        </insert>
+        <insert tableName="LECTURER_COURSE">
+            <column name="COURSE_ID" value="4"/>
+            <column name="PERSON_ID" value="16"/>
+        </insert>
+        <insert tableName="LECTURER_COURSE">
+            <column name="COURSE_ID" value="5"/>
+            <column name="PERSON_ID" value="17"/>
+        </insert>
+        <insert tableName="LECTURER_COURSE">
+            <column name="COURSE_ID" value="6"/>
+            <column name="PERSON_ID" value="18"/>
+        </insert>
+        <insert tableName="LECTURER_COURSE">
+            <column name="COURSE_ID" value="7"/>
+            <column name="PERSON_ID" value="19"/>
+        </insert>
+    </changeSet>
+
+
+    <!-- Filling SEMINARIST_COURSE table -->
+    <changeSet id="11" author="admin">
+        <insert tableName="SEMINARIST_COURSE">
+            <column name="COURSE_ID" value="1"/>
+            <column name="PERSON_ID" value="13"/>
+        </insert>
+        <insert tableName="SEMINARIST_COURSE">
+            <column name="COURSE_ID" value="2"/>
+            <column name="PERSON_ID" value="14"/>
+        </insert>
+        <insert tableName="SEMINARIST_COURSE">
+            <column name="COURSE_ID" value="3"/>
+            <column name="PERSON_ID" value="15"/>
+        </insert>
+        <insert tableName="SEMINARIST_COURSE">
+            <column name="COURSE_ID" value="4"/>
+            <column name="PERSON_ID" value="16"/>
+        </insert>
+        <insert tableName="SEMINARIST_COURSE">
+            <column name="COURSE_ID" value="5"/>
+            <column name="PERSON_ID" value="17"/>
+        </insert>
+        <insert tableName="SEMINARIST_COURSE">
+            <column name="COURSE_ID" value="6"/>
+            <column name="PERSON_ID" value="18"/>
+        </insert>
+        <insert tableName="SEMINARIST_COURSE">
+            <column name="COURSE_ID" value="7"/>
+            <column name="PERSON_ID" value="19"/>
+        </insert>
+    </changeSet>
+
+
+    <!-- Filling STUDENT_STUDY_PLAN table -->
+    <changeSet id="12" author="admin">
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="1"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="1"/>
+            <column name="SUBJECT_ID" value="1"/>
+            <column name="SEMINARIST_ID" value="13"/>
+            <column name="LECTURER_ID" value="13"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="2"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="1"/>
+            <column name="SUBJECT_ID" value="6"/>
+            <column name="SEMINARIST_ID" value="16"/>
+            <column name="LECTURER_ID" value="16"/>
+        </insert>
+
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="3"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="2"/>
+            <column name="SUBJECT_ID" value="1"/>
+            <column name="SEMINARIST_ID" value="13"/>
+            <column name="LECTURER_ID" value="13"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="4"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="2"/>
+            <column name="SUBJECT_ID" value="6"/>
+            <column name="SEMINARIST_ID" value="16"/>
+            <column name="LECTURER_ID" value="16"/>
+        </insert>
+
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="5"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="3"/>
+            <column name="SUBJECT_ID" value="1"/>
+            <column name="SEMINARIST_ID" value="13"/>
+            <column name="LECTURER_ID" value="13"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="6"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="3"/>
+            <column name="SUBJECT_ID" value="2"/>
+            <column name="SEMINARIST_ID" value="13"/>
+            <column name="LECTURER_ID" value="13"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="7"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="3"/>
+            <column name="SUBJECT_ID" value="6"/>
+            <column name="SEMINARIST_ID" value="16"/>
+            <column name="LECTURER_ID" value="16"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="8"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="3"/>
+            <column name="SUBJECT_ID" value="7"/>
+            <column name="SEMINARIST_ID" value="16"/>
+            <column name="LECTURER_ID" value="16"/>
+        </insert>
+
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="9"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="4"/>
+            <column name="SUBJECT_ID" value="1"/>
+            <column name="SEMINARIST_ID" value="13"/>
+            <column name="LECTURER_ID" value="13"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="10"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="4"/>
+            <column name="SUBJECT_ID" value="2"/>
+            <column name="SEMINARIST_ID" value="13"/>
+            <column name="LECTURER_ID" value="13"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="11"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="4"/>
+            <column name="SUBJECT_ID" value="6"/>
+            <column name="SEMINARIST_ID" value="16"/>
+            <column name="LECTURER_ID" value="16"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="12"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="4"/>
+            <column name="SUBJECT_ID" value="7"/>
+            <column name="SEMINARIST_ID" value="16"/>
+            <column name="LECTURER_ID" value="16"/>
+        </insert>
+
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="13"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="5"/>
+            <column name="SUBJECT_ID" value="3"/>
+            <column name="SEMINARIST_ID" value="14"/>
+            <column name="LECTURER_ID" value="14"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="14"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="5"/>
+            <column name="SUBJECT_ID" value="10"/>
+            <column name="SEMINARIST_ID" value="17"/>
+            <column name="LECTURER_ID" value="17"/>
+        </insert>
+
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="15"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="6"/>
+            <column name="SUBJECT_ID" value="3"/>
+            <column name="SEMINARIST_ID" value="14"/>
+            <column name="LECTURER_ID" value="14"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="16"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="6"/>
+            <column name="SUBJECT_ID" value="10"/>
+            <column name="SEMINARIST_ID" value="17"/>
+            <column name="LECTURER_ID" value="17"/>
+        </insert>
+
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="17"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="7"/>
+            <column name="SUBJECT_ID" value="3"/>
+            <column name="SEMINARIST_ID" value="14"/>
+            <column name="LECTURER_ID" value="14"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="18"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="7"/>
+            <column name="SUBJECT_ID" value="10"/>
+            <column name="SEMINARIST_ID" value="17"/>
+            <column name="LECTURER_ID" value="17"/>
+        </insert>
+
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="19"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="8"/>
+            <column name="SUBJECT_ID" value="3"/>
+            <column name="SEMINARIST_ID" value="14"/>
+            <column name="LECTURER_ID" value="14"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="20"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="8"/>
+            <column name="SUBJECT_ID" value="10"/>
+            <column name="SEMINARIST_ID" value="17"/>
+            <column name="LECTURER_ID" value="17"/>
+        </insert>
+
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="21"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="9"/>
+            <column name="SUBJECT_ID" value="4"/>
+            <column name="SEMINARIST_ID" value="15"/>
+            <column name="LECTURER_ID" value="15"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="22"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="9"/>
+            <column name="SUBJECT_ID" value="5"/>
+            <column name="SEMINARIST_ID" value="15"/>
+            <column name="LECTURER_ID" value="15"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="23"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="9"/>
+            <column name="SUBJECT_ID" value="8"/>
+            <column name="SEMINARIST_ID" value="18"/>
+            <column name="LECTURER_ID" value="18"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="24"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="9"/>
+            <column name="SUBJECT_ID" value="9"/>
+            <column name="SEMINARIST_ID" value="18"/>
+            <column name="LECTURER_ID" value="18"/>
+        </insert>
+
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="25"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="10"/>
+            <column name="SUBJECT_ID" value="4"/>
+            <column name="SEMINARIST_ID" value="15"/>
+            <column name="LECTURER_ID" value="15"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="26"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="10"/>
+            <column name="SUBJECT_ID" value="5"/>
+            <column name="SEMINARIST_ID" value="15"/>
+            <column name="LECTURER_ID" value="15"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="27"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="10"/>
+            <column name="SUBJECT_ID" value="8"/>
+            <column name="SEMINARIST_ID" value="18"/>
+            <column name="LECTURER_ID" value="18"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="28"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="10"/>
+            <column name="SUBJECT_ID" value="9"/>
+            <column name="SEMINARIST_ID" value="18"/>
+            <column name="LECTURER_ID" value="18"/>
+        </insert>
+
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="29"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="11"/>
+            <column name="SUBJECT_ID" value="4"/>
+            <column name="SEMINARIST_ID" value="15"/>
+            <column name="LECTURER_ID" value="15"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="30"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="11"/>
+            <column name="SUBJECT_ID" value="5"/>
+            <column name="SEMINARIST_ID" value="15"/>
+            <column name="LECTURER_ID" value="15"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="31"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="11"/>
+            <column name="SUBJECT_ID" value="8"/>
+            <column name="SEMINARIST_ID" value="18"/>
+            <column name="LECTURER_ID" value="18"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="32"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="11"/>
+            <column name="SUBJECT_ID" value="9"/>
+            <column name="SEMINARIST_ID" value="18"/>
+            <column name="LECTURER_ID" value="18"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="33"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="11"/>
+            <column name="SUBJECT_ID" value="11"/>
+            <column name="SEMINARIST_ID" value="19"/>
+            <column name="LECTURER_ID" value="19"/>
+        </insert>
+
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="34"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="12"/>
+            <column name="SUBJECT_ID" value="4"/>
+            <column name="SEMINARIST_ID" value="15"/>
+            <column name="LECTURER_ID" value="15"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="35"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="12"/>
+            <column name="SUBJECT_ID" value="5"/>
+            <column name="SEMINARIST_ID" value="15"/>
+            <column name="LECTURER_ID" value="15"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="36"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="12"/>
+            <column name="SUBJECT_ID" value="8"/>
+            <column name="SEMINARIST_ID" value="18"/>
+            <column name="LECTURER_ID" value="18"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="37"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="12"/>
+            <column name="SUBJECT_ID" value="9"/>
+            <column name="SEMINARIST_ID" value="18"/>
+            <column name="LECTURER_ID" value="18"/>
+        </insert>
+        <insert tableName="STUDENT_STUDY_PLAN">
+            <column name="ID" value="38"/>
+            <column name="VERSION" value="1"/>
+            <column name="STUDENT_ID" value="12"/>
+            <column name="SUBJECT_ID" value="11"/>
+            <column name="SEMINARIST_ID" value="19"/>
+            <column name="LECTURER_ID" value="19"/>
+        </insert>
+    </changeSet>
+
+    <!-- Filling SCOREBOARD table -->
+    <changeSet id="13" author="admin">
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="1"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="1"/>
+            <column name="SUBJECT_ID" value="1"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="2"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="1"/>
+            <column name="SUBJECT_ID" value="2"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="3"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="1"/>
+            <column name="SUBJECT_ID" value="6"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="4"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="1"/>
+            <column name="SUBJECT_ID" value="7"/>
+        </insert>
+
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="5"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="2"/>
+            <column name="SUBJECT_ID" value="1"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="6"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="2"/>
+            <column name="SUBJECT_ID" value="2"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="7"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="2"/>
+            <column name="SUBJECT_ID" value="6"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="8"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="2"/>
+            <column name="SUBJECT_ID" value="7"/>
+        </insert>
+
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="9"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="6"/>
+            <column name="STUDENT_ID" value="3"/>
+            <column name="SUBJECT_ID" value="1"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="10"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="3"/>
+            <column name="SUBJECT_ID" value="2"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="11"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="4"/>
+            <column name="STUDENT_ID" value="3"/>
+            <column name="SUBJECT_ID" value="6"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="12"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="3"/>
+            <column name="SUBJECT_ID" value="7"/>
+        </insert>
+
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="13"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="9"/>
+            <column name="STUDENT_ID" value="4"/>
+            <column name="SUBJECT_ID" value="1"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="14"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="4"/>
+            <column name="SUBJECT_ID" value="2"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="15"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="6"/>
+            <column name="STUDENT_ID" value="4"/>
+            <column name="SUBJECT_ID" value="6"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="16"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="4"/>
+            <column name="SUBJECT_ID" value="7"/>
+        </insert>
+
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="17"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="6"/>
+            <column name="STUDENT_ID" value="5"/>
+            <column name="SUBJECT_ID" value="3"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="18"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="7"/>
+            <column name="STUDENT_ID" value="5"/>
+            <column name="SUBJECT_ID" value="10"/>
+        </insert>
+
+
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="19"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="7"/>
+            <column name="STUDENT_ID" value="6"/>
+            <column name="SUBJECT_ID" value="3"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="20"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="5"/>
+            <column name="STUDENT_ID" value="6"/>
+            <column name="SUBJECT_ID" value="10"/>
+        </insert>
+
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="21"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="7"/>
+            <column name="SUBJECT_ID" value="3"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="22"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="7"/>
+            <column name="SUBJECT_ID" value="10"/>
+        </insert>
+
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="23"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="8"/>
+            <column name="SUBJECT_ID" value="3"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="24"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="8"/>
+            <column name="SUBJECT_ID" value="10"/>
+        </insert>
+
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="25"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="5"/>
+            <column name="STUDENT_ID" value="9"/>
+            <column name="SUBJECT_ID" value="4"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="26"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="9"/>
+            <column name="SUBJECT_ID" value="5"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="27"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="9"/>
+            <column name="STUDENT_ID" value="9"/>
+            <column name="SUBJECT_ID" value="8"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="28"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="9"/>
+            <column name="SUBJECT_ID" value="9"/>
+        </insert>
+
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="29"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="4"/>
+            <column name="STUDENT_ID" value="10"/>
+            <column name="SUBJECT_ID" value="4"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="30"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="10"/>
+            <column name="SUBJECT_ID" value="5"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="31"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="10"/>
+            <column name="STUDENT_ID" value="10"/>
+            <column name="SUBJECT_ID" value="8"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="32"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="NULL"/>
+            <column name="STUDENT_ID" value="10"/>
+            <column name="SUBJECT_ID" value="9"/>
+        </insert>
+
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="33"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="10"/>
+            <column name="STUDENT_ID" value="11"/>
+            <column name="SUBJECT_ID" value="4"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="34"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="4"/>
+            <column name="STUDENT_ID" value="11"/>
+            <column name="SUBJECT_ID" value="5"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="35"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="3"/>
+            <column name="STUDENT_ID" value="11"/>
+            <column name="SUBJECT_ID" value="8"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="36"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="10"/>
+            <column name="STUDENT_ID" value="11"/>
+            <column name="SUBJECT_ID" value="9"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="37"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="6"/>
+            <column name="STUDENT_ID" value="11"/>
+            <column name="SUBJECT_ID" value="11"/>
+        </insert>
+
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="38"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="4"/>
+            <column name="STUDENT_ID" value="12"/>
+            <column name="SUBJECT_ID" value="4"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="39"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="7"/>
+            <column name="STUDENT_ID" value="12"/>
+            <column name="SUBJECT_ID" value="5"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="40"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="10"/>
+            <column name="STUDENT_ID" value="12"/>
+            <column name="SUBJECT_ID" value="8"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="41"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="5"/>
+            <column name="STUDENT_ID" value="12"/>
+            <column name="SUBJECT_ID" value="9"/>
+        </insert>
+        <insert tableName="SCOREBOARD">
+            <column name="ID" value="42"/>
+            <column name="VERSION" value="1"/>
+            <column name="MARK" value="5"/>
+            <column name="STUDENT_ID" value="12"/>
+            <column name="SUBJECT_ID" value="11"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
