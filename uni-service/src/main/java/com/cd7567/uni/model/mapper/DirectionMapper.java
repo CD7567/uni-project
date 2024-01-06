@@ -24,6 +24,12 @@ import java.util.Set;
 public interface DirectionMapper {
     @Mapping(target = "id", source = "direction.id")
     @Mapping(target = "name", source = "direction.name")
+    @Mapping(target = "number", source = "direction.number")
+    @Mapping(target = "faculty", source = "direction.faculty")
+    com.cd7567.uni.model.api.entities.Direction toDTO(Direction direction);
+
+    @Mapping(target = "id", source = "direction.id")
+    @Mapping(target = "name", source = "direction.name")
     DirectionBriefGetDTO toBriefDTO(Direction direction);
 
     List<DirectionBriefGetDTO> toBriefDTO(List<Direction> directions);

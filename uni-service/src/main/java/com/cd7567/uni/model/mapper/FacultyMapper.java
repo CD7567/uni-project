@@ -23,6 +23,11 @@ public interface FacultyMapper {
     @Mapping(target = "id", source = "faculty.id")
     @Mapping(target = "name", source = "faculty.name")
     @Mapping(target = "director", source = "faculty.director")
+    com.cd7567.uni.model.api.entities.Faculty toDTO(Faculty faculty);
+
+    @Mapping(target = "id", source = "faculty.id")
+    @Mapping(target = "name", source = "faculty.name")
+    @Mapping(target = "director", source = "faculty.director")
     FacultyBriefGetDTO toBriefDTO(Faculty faculty);
 
     List<FacultyBriefGetDTO> toBriefDTO(List<Faculty> faculties);

@@ -19,6 +19,10 @@ import java.util.Set;
 )
 public interface ScoreMapper {
     @Mapping(target = "id", source = "record.id")
+    @Mapping(target = "mark", source = "record.mark")
+    com.cd7567.uni.model.api.entities.ScoreBoardRecord toDTO(ScoreBoardRecord record);
+
+    @Mapping(target = "id", source = "record.id")
     @Mapping(target = "studentId", source = "record.student.id")
     @Mapping(target = "subjectId", source = "record.subject.id")
     @Mapping(target = "mark", source = "record.mark")

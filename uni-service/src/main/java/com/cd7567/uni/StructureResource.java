@@ -3,6 +3,8 @@ package com.cd7567.uni;
 import com.cd7567.uni.model.api.course.CoursePutDTO;
 import com.cd7567.uni.model.api.direction.DirectionPutDTO;
 import com.cd7567.uni.model.api.faculty.*;
+import com.cd7567.uni.model.api.structure.getcoursebyid.GetCourseByIdRequest;
+import com.cd7567.uni.model.api.structure.getcoursebyid.GetCourseByIdResult;
 import com.cd7567.uni.service.CourseService;
 import com.cd7567.uni.service.DirectionService;
 import com.cd7567.uni.service.FacultyService;
@@ -11,6 +13,7 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import org.jboss.resteasy.reactive.RestResponse;
 
 import java.util.List;
 
@@ -25,6 +28,15 @@ public class StructureResource {
 
     @Inject
     CourseService courseService;
+
+    @POST
+    @Path("/course/id")
+    public RestResponse<GetCourseByIdResult> getCourseById(GetCourseByIdRequest request) {
+        return RestResponse.ok(courseService.getByIds(request.getIds()));
+    }
+
+
+
 
     @GET
     @Path("/faculty")

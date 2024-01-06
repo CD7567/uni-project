@@ -23,6 +23,10 @@ import java.util.Set;
 public interface GroupMapper {
     @Mapping(target = "id", source = "group.id")
     @Mapping(target = "number", source = "group.number")
+    @Mapping(target = "term", source = "group.term")
+    com.cd7567.uni.model.api.entities.Group toDTO(Group group);
+    @Mapping(target = "id", source = "group.id")
+    @Mapping(target = "number", source = "group.number")
     GroupBriefGetDTO toBriefDTO(Group group);
 
     List<GroupBriefGetDTO> toBriefDTO(List<Group> groups);

@@ -20,6 +20,14 @@ import java.util.Set;
 public interface SubjectMapper {
     @Mapping(target = "id", source = "subject.id")
     @Mapping(target = "name", source = "subject.name")
+    @Mapping(target = "term", source = "subject.term")
+    @Mapping(target = "hours", source = "subject.hours")
+    @Mapping(target = "type", source = "subject.type")
+    @Mapping(target = "markWay", source = "subject.markWay")
+    com.cd7567.uni.model.api.entities.Subject toDTO(Subject subject);
+
+    @Mapping(target = "id", source = "subject.id")
+    @Mapping(target = "name", source = "subject.name")
     SubjectBriefGetDTO toBriefDTO(Subject subject);
 
     List<SubjectBriefGetDTO> toBriefDTO(List<Subject> subjects);

@@ -18,6 +18,12 @@ import java.util.Set;
 )
 public interface PersonMapper {
     @Mapping(target = "id", source = "person.id")
+    @Mapping(target = "type", source = "person.type")
+    @Mapping(target = "firstName", source = "person.firstName")
+    @Mapping(target = "lastName", source = "person.lastName")
+    com.cd7567.uni.model.api.entities.Person toDTO(Person person);
+
+    @Mapping(target = "id", source = "person.id")
     @Mapping(target = "name", expression = "java(person.getFirstName() + ' ' + person.getLastName())")
     @Mapping(target = "type", source = "person.type")
     PersonBriefGetDTO toBriefDTO(Person person);

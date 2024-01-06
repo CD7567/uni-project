@@ -23,6 +23,18 @@ import java.util.Set;
 public interface CourseMapper {
     @Mapping(target = "id", source = "course.id")
     @Mapping(target = "name", source = "course.name")
+    //@Mapping(target = "chief", source = "course.chief")
+    com.cd7567.uni.model.api.entities.Course toDTO(Course course);
+
+    List<com.cd7567.uni.model.api.entities.Course> toDTO(List<Course> courses);
+
+    @Mapping(target = "id", source = "course.id")
+    @Mapping(target = "name", source = "course.name")
+    //@Mapping(target = "chief", source = "course.chief")
+    Course fromDTO(com.cd7567.uni.model.api.entities.Course course);
+
+    @Mapping(target = "id", source = "course.id")
+    @Mapping(target = "name", source = "course.name")
     CourseBriefGetDTO toBriefDTO(Course course);
 
     List<CourseBriefGetDTO> toBriefDTO(List<Course> course);

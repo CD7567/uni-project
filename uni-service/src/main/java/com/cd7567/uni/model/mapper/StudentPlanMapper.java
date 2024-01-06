@@ -18,11 +18,17 @@ import java.util.Set;
 )
 public interface StudentPlanMapper {
     @Mapping(target = "id", source = "record.id")
+    @Mapping(target = "subject", source = "record.subject")
+    com.cd7567.uni.model.api.entities.StudentPlanRecord toDTO(StudentPlanRecord record);
+    /*
+    @Mapping(target = "id", source = "record.id")
     @Mapping(target = "lecturerId", source = "record.lecturer.id")
     @Mapping(target = "seminaristId", source = "record.seminarist.id")
     @Mapping(target = "studentId", source = "record.student.id")
     @Mapping(target = "subjectId", source = "record.subject.id")
     StudentPlanGetDTO toDTO(StudentPlanRecord record);
+
+     */
 
     List<StudentPlanGetDTO> toDTO(List<StudentPlanRecord> records);
     Set<StudentPlanGetDTO> toDTO(Set<StudentPlanRecord> records);
